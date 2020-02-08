@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/test")
 public class HelloController {
-
+// commit
 
     @GetMapping("/hi/{id}")
     @ResponseBody
