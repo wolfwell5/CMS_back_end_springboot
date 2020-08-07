@@ -1,0 +1,4 @@
+server.port: 32088
+
+spring.profiles.active: dev
+spring.application.name: consul-client

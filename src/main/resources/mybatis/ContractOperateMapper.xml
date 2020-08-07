@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.springboot.myspringboot.dao.ContractOperateMapper">
+
+    <select id="findById2" resultType="java.lang.String">
+    SELECT customer from  contract limit 1
+    </select>
+
+    <insert id="saveContractInfo" parameterType="com.springboot.myspringboot.entity.Contract">
+        insert into contract (customer,contractName,contractMoney,receiveMoney,receiveDate
+        ,insuranceMoney,insuranceDueDate,ticketStatus,ticketCompany,ticketGenerateDate
+        ,comment,createDate,pid,payMoney,payDate
+        ,ticketBackStatus,ticketBackCompany,ticketBackDate
+        )
+
+        values(#{customer},#{contractName},#{contractMoney},#{receiveMoney},#{receiveDate},
+        #{insuranceMoney},#{insuranceDueDate},#{ticketStatus},#{ticketCompany},#{ticketGenerateDate},
+        #{comment},NOW(),#{pid}, #{payMoney},#{payDate}
+        ,#{ticketBackStatus} ,#{ticketBackCompany} ,#{ticketBackDate}
+        )
+
+        <selectKey keyColumn="id" resultType="long" keyProperty="cid" order="AFTER">
+            SELECT LAST_INSERT_ID ()
+        </selectKey>
+    </insert>
+
+    <select id="contractNameAutoCompletion" resultType="java.util.Map">
+        select customer,cid from contract c where c.customer like CONCAT('%',#{str},'%')
+    </select>
+
+    <select id="getTableDataByCondition" resultType="com.springboot.myspringboot.entity.Contract"
+            parameterType="com.springboot.myspringboot.entity.Contract">
+        /*select * from contract c where 1=1*/
+        SELECT (@rownum := @rownum + 1) as rownum,c.* from contract c, (SELECT @rownum := 0) AS rn
+        where 1=1
+        <include refid="whereClause"></include>
+        <include refid="orderByClause"></include>
+    </select>
+
+    <delete id="deleteContracts" parameterType="List">
+        delete from contract where cid in
+        <foreach collection="cids" open="(" close=")" item="cid">
+            ${cid}
+        </foreach>
+    </delete>
+
+    <select id="getContractById" resultType="com.springboot.myspringboot.entity.Contract"
+            parameterType="com.springboot.myspringboot.entity.Contract">
+        /*select * from contract c where 1=1*/
+        SELECT c.* from contract c
+        where 1=1
+        and cid = ${cid}
+    </select>
+
+    <sql id="whereClause">
+        <if test="cid != '' and cid != null">
+            and cid = #{cid}
+        </if>
+        <if test="customer != '' and customer != null">
+            and customer = #{customer}
+        </if>
+        <if test="contractName != ''  and contractName != null">
+            and contractName = #{contractName}
+        </if>
+
+        <if test="(contractMoneyStart != '' and contractMoneyStart != null) and (contractMoneyEnd == '' or contractMoneyEnd == null)">
+            and contractMoney = #{contractMoneyStart}
+        </if>
+        <if test="(contractMoneyEnd != ''  and contractMoneyEnd != null) and (contractMoneyEnd == '' or contractMoneyEnd == null)">
+            and contractMoney = #{contractMoneyEnd}
+        </if>
+        <if test="(contractMoneyEnd != ''  and contractMoneyEnd != null) and (contractMoneyEnd != '' and contractMoneyEnd != null)">
+            and contractMoney between #{contractMoneyStart} and #{contractMoneyEnd}
+        </if>
+
+        <if test="ticketStatus != '' and ticketStatus != null">
+            and ticketStatus = #{ticketStatus}
+        </if>
+        <if test="type != '' and type != null">
+            <choose>
+                <when test="type == 'incomeSearch'">
+                    and ticketBackStatus is null
+                </when>
+                <when test="type == 'expendSearch'">
+                    and ticketBackStatus is not null
+                </when>
+            </choose>
+        </if>
+    </sql>
+
+    <sql id="orderByClause">
+        order By createDate desc
+    </sql>
+</mapper>
