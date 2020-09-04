@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,11 @@ public class ContractOperateController {
     @PostMapping("/saveContract")
     @ResponseBody
     public CommonResult saveContract(@RequestBody Contract contract) {
-        service.saveContractInfo(contract);
+        if (contract.getCid() == 0) {
+            service.saveContractInfo(contract);
+        } else {
+            service.updateContractInfo(contract);
+        }
         return CommonResult.success("data", "保存成功");
     }
 
@@ -33,8 +38,6 @@ public class ContractOperateController {
     @GetMapping("/searchContractTableData")
     @ResponseBody
     public List<Contract> getTableDataByCondition(Contract contractSearchCondition) {
-
-//        System.out.println("contractSearchCondition = " + contractSearchCondition);
         return service.getTableDataByCondition(contractSearchCondition);
     }
 
@@ -50,5 +53,11 @@ public class ContractOperateController {
     public Contract getContractById(@PathVariable(name = "cid") String cid) {
         return service.getContractById(cid);
     }
+
+    @PostMapping("/downloadExcelDataByCondition")
+    public void downloadExcelDataByCondition(@RequestParam Map<String, String> map, HttpServletResponse response) {
+        service.downLoadExcel(map, response);
+    }
+
 
 }

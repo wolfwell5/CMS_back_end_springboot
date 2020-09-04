@@ -24,6 +24,8 @@ public interface ContractOperateMapper {
 //            "#{comment})")
     int saveContractInfo(Contract contract);
 
+    int updateContractInfo(Contract contract);
+
     //    @Select("select customer from contract c where c.customer like CONCAT('%',#{str},'%')")
 //    @Select("select customer from contract c where c.customer, like '% ${str} %' ")
     List<Map<String, Object>> contractNameAutoCompletion(@Param("str") String str);
@@ -34,4 +36,7 @@ public interface ContractOperateMapper {
 
     Contract getContractById(@Param("cid") String cid);
 
+    List<Contract> getAllIncomeContract();
+
+    List<Contract> getAllExpendContract(@Param("cid") long cid);
 }

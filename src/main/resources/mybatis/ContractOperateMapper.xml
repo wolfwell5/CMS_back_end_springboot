@@ -5,7 +5,7 @@
 <mapper namespace="com.springboot.myspringboot.dao.ContractOperateMapper">
 
     <select id="findById2" resultType="java.lang.String">
-    SELECT customer from  contract limit 1
+        SELECT customer from  contract limit 1
     </select>
 
     <insert id="saveContractInfo" parameterType="com.springboot.myspringboot.entity.Contract">
@@ -26,13 +26,35 @@
         </selectKey>
     </insert>
 
+    <update id="updateContractInfo" parameterType="com.springboot.myspringboot.entity.Contract">
+        update  contract set
+            customer =#{customer}
+            ,contractName = #{contractName}
+            ,contractMoney = #{contractMoney}
+            ,receiveMoney = #{receiveMoney}
+            ,receiveDate = #{receiveDate}
+            ,insuranceMoney = #{insuranceMoney}
+            ,insuranceDueDate = #{insuranceDueDate}
+            ,ticketStatus = #{ticketStatus}
+            ,ticketCompany = #{ticketCompany}
+            ,ticketGenerateDate = #{ticketGenerateDate}
+            ,comment = #{comment}
+            ,updateDate = now()
+            ,pid = #{pid}
+            ,payMoney = #{payMoney}
+            ,payDate = #{payDate}
+            ,ticketBackStatus = #{ticketBackStatus}
+            ,ticketBackCompany = #{ticketBackCompany}
+            ,ticketBackDate = #{ticketBackDate}
+            where cid = #{cid}
+    </update>
+
     <select id="contractNameAutoCompletion" resultType="java.util.Map">
-        select customer,cid from contract c where c.customer like CONCAT('%',#{str},'%')
+        select distinct customer,cid from contract c where c.customer like CONCAT('%',#{str},'%')
     </select>
 
     <select id="getTableDataByCondition" resultType="com.springboot.myspringboot.entity.Contract"
             parameterType="com.springboot.myspringboot.entity.Contract">
-        /*select * from contract c where 1=1*/
         SELECT (@rownum := @rownum + 1) as rownum,c.* from contract c, (SELECT @rownum := 0) AS rn
         where 1=1
         <include refid="whereClause"></include>
@@ -48,10 +70,25 @@
 
     <select id="getContractById" resultType="com.springboot.myspringboot.entity.Contract"
             parameterType="com.springboot.myspringboot.entity.Contract">
-        /*select * from contract c where 1=1*/
-        SELECT c.* from contract c
+        SELECT c.*
+        ,(select customer from contract where cid= (select pid from contract where cid = #{cid})) as customerSource
+        from contract c
         where 1=1
         and cid = ${cid}
+    </select>
+
+    <select id="getAllIncomeContract" resultType="com.springboot.myspringboot.entity.Contract">
+        select * from contract
+        where 1=1
+        and (pid=0 or pid is null)
+        order by createDate
+    </select>
+
+    <select id="getAllExpendContract" resultType="com.springboot.myspringboot.entity.Contract">
+        select * from contract
+        where 1=1
+        and pid= #{cid}
+        order by payMoney desc
     </select>
 
     <sql id="whereClause">
@@ -59,10 +96,10 @@
             and cid = #{cid}
         </if>
         <if test="customer != '' and customer != null">
-            and customer = #{customer}
+            and customer like concat('%',#{customer},'%')
         </if>
         <if test="contractName != ''  and contractName != null">
-            and contractName = #{contractName}
+            and contractName like concat('%',#{contractName},'%')
         </if>
 
         <if test="(contractMoneyStart != '' and contractMoneyStart != null) and (contractMoneyEnd == '' or contractMoneyEnd == null)">
