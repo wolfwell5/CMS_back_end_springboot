@@ -1,0 +1,19 @@
+server:
+  port: 8088
+
+spring.profiles.active: dev
+spring.application.name: consul-client
+
+spring:
+  datasource:                           # 指定数据源
+    url: jdbc:mysql://127.0.0.1:3306/contractmanagement?serverTimezone=GMT&characterEncoding=utf-8
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+
+mybatis:
+  mapper-locations: "classpath*:mybatis/*.xml"
+  # spring boot集成mybatis的方式打印sql
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
