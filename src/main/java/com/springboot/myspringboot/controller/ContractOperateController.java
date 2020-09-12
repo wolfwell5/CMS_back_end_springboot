@@ -59,5 +59,11 @@ public class ContractOperateController {
         service.downLoadExcel(map, response);
     }
 
+    @GetMapping("/getCostSummary")
+    @ResponseBody
+    public List<Contract> getCostSummary() {
+        return service.getCostSummary();
+    }
+
 
 }

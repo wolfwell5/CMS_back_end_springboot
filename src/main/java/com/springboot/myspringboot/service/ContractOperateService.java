@@ -90,10 +90,10 @@ public class ContractOperateService {
             startSumRowIdx = endSumIdx + 3;
             generateSumExcel(excelExportVo, endSumIdx + 3, tableDataByCondition2.size() + startSumRowIdx);
             allLittleSumLine.add(tableDataByCondition2.size() + startSumRowIdx + 1);
-// 概况的总体盈亏
+            //  第一sheet页 概况的总体盈亏
             generateOverviewSumData(excelExportVo, allLittleSumLine);
 
-            //            第 2 sheet页 详情
+//       第 2 sheet页 详情
             List<Contract> sheet2Data = new ArrayList<>();
 //            所有收入 的合同
             List<Contract> list = getAllIncomeContract();
@@ -172,4 +172,27 @@ public class ContractOperateService {
     }
 
 
+    public List<Contract> getCostSummary() {
+
+//       第 2 sheet页 详情
+        List<Contract> sheet2Data = new ArrayList<>();
+//            所有收入 的合同
+        List<Contract> list = getAllIncomeContract();
+        for (int i = 0; i < list.size(); i++) {
+            Contract ci = list.get(i);
+            String contractMoney = ci.getContractMoney();
+
+            List<Contract> allExpendContract = getAllExpendContract(ci.getCid());
+
+            for (int j = 0; j < allExpendContract.size(); j++) {
+                Contract item = allExpendContract.get(j);
+                contractMoney = minusStr(contractMoney, item.getContractMoney());
+            }
+            ci.setContractMoney(contractMoney);
+
+            sheet2Data.add(ci);
+        }
+
+        return sheet2Data;
+    }
 }

@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -384,6 +385,12 @@ public class ExcelUtil {
         excelExportVo.setStartSumIdx(startSumRowIdx);
         excelExportVo.setEndSumIdx(endSumRowIdx);
         generateSumData(excelExportVo);
+    }
+
+    public static String minusStr(String a, String b) {
+        BigDecimal aa = new BigDecimal(a);
+        BigDecimal bb = new BigDecimal(b);
+        return String.valueOf(aa.subtract(bb).longValue());
     }
 
 }
