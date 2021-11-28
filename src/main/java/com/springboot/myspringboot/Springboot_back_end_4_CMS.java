@@ -6,14 +6,14 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
-@SpringBootApplication
+//@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @MapperScan("mybatis")//启动类中添加这句，扫描dao文件
-public class MyspringbootApplication {
+public class Springboot_back_end_4_CMS {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(MyspringbootApplication.class, args);
+        SpringApplication.run(Springboot_back_end_4_CMS.class, args);
     }
 
 }
