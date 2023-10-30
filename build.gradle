@@ -1,51 +1,65 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE'
+    }
+}
+
 plugins {
-    id 'org.springframework.boot' version '2.0.6.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+//    id 'org.springframework.boot' version '2.0.6'
     id 'java'
 }
 
-group = 'com.springboot'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+apply plugin: 'org.springframework.boot'
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/main/java']
-        }
-        resources {
-            srcDirs = ['src/main/resources']
-        }
-    }
-//    test {
+
+//sourceSets {
+//    main {
 //        java {
-//            srcDirs = ['src/test/java']
+//            srcDirs = ['src/main/java']
 //        }
 //        resources {
-//            srcDirs = ['src/test/resources']
+//            srcDirs = ['src/main/resources']
 //        }
 //    }
-}
+//}
+
+//pluginRepositories {
+//    pluginRepository {
+//        maven { url 'https://maven.aliyun.com/repository/spring-plugin' }
+//    }
+//}
 
 repositories {
-//    mavenCentral()
-    maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+    // 本地仓库，地址是maven本地仓库地址
+    mavenLocal()
+
+    // 阿里云仓库
+    maven { url 'https://maven.aliyun.com/repository/central' }
+    maven { url 'https://maven.aliyun.com/repository/google' }
+    maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+    maven { url 'https://maven.aliyun.com/repository/jcenter' }
+    maven { url 'https://maven.aliyun.com/repository/spring' }
+    maven { url 'https://maven.aliyun.com/repository/spring-plugin' }
+    maven { url 'https://maven.aliyun.com/repository/releases' }
+    maven { url 'https://maven.aliyun.com/repository/spring-plugin' }
+    maven { url 'https://maven.aliyun.com/repository/public' }
+    maven { url 'https://maven.aliyun.com/repository/releases' }
+    maven { url 'https://maven.aliyun.com/repository/grails-core' }
+    maven { url 'https://maven.aliyun.com/repository/mapr-public' }
 }
 
 dependencies {
+    //lombok jar
+//    compileOnly 'org.projectlombok:lombok:1.18.6'
+//    annotationProcessor 'org.projectlombok:lombok:1.18.6'
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-}
-
-//lombok jar
-dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.6'
-    annotationProcessor 'org.projectlombok:lombok:1.18.6'
-}
-
-dependencies {
     compile('com.fasterxml.jackson.jaxrs:jackson-jaxrs-xml-provider:2.4.3')
     compile('com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.5')
     compile('com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.5')
